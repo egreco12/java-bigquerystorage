@@ -154,7 +154,7 @@ public class BigQueryWriteStubSettings extends StubSettings<BigQueryWriteStubSet
   /** Returns the default service name. */
   @Override
   public String getServiceName() {
-    return "bigquerystorage";
+    return "test-bigquerystorage-grpc.sandbox";
   }
 
   /** Returns a builder for the default ExecutorProvider for this service. */
@@ -164,12 +164,12 @@ public class BigQueryWriteStubSettings extends StubSettings<BigQueryWriteStubSet
 
   /** Returns the default service endpoint. */
   public static String getDefaultEndpoint() {
-    return "bigquerystorage.googleapis.com:443";
+    return "test-bigquerystorage-grpc.sandbox.googleapis.com:443";
   }
 
   /** Returns the default mTLS service endpoint. */
   public static String getDefaultMtlsEndpoint() {
-    return "bigquerystorage.mtls.googleapis.com:443";
+    return "test-bigquerystorage-grpc.sandbox.googleapis.com:443";
   }
 
   /** Returns the default service scopes. */
@@ -187,6 +187,8 @@ public class BigQueryWriteStubSettings extends StubSettings<BigQueryWriteStubSet
   /** Returns a builder for the default ChannelProvider for this service. */
   public static InstantiatingGrpcChannelProvider.Builder defaultGrpcTransportProviderBuilder() {
     return InstantiatingGrpcChannelProvider.newBuilder()
+        .setAttemptDirectPath(true)
+        .setAttemptDirectPathXds()
         .setMaxInboundMessageSize(Integer.MAX_VALUE);
   }
 

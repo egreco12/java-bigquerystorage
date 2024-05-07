@@ -68,9 +68,9 @@ import org.threeten.bp.LocalDateTime;
 public class ITBigQueryWriteManualClientTest {
   private static final Logger LOG =
       Logger.getLogger(ITBigQueryWriteManualClientTest.class.getName());
-  private static final String DATASET = RemoteBigQueryHelper.generateDatasetName();
+  private static final String DATASET = "dp_test_dataset";
   private static final String DATASET_EU = RemoteBigQueryHelper.generateDatasetName();
-  private static final String TABLE = "testtable";
+  private static final String TABLE = "dp_test_table";
   private static final String TABLE2 = "complicatedtable";
 
   private static final String TEST_TRACE_ID = "DATAFLOW:job_id";
@@ -110,7 +110,7 @@ public class ITBigQueryWriteManualClientTest {
     bigquery = bigqueryHelper.getOptions().getService();
     DatasetInfo datasetInfo =
         DatasetInfo.newBuilder(/* datasetId = */ DATASET).setDescription(DESCRIPTION).build();
-    bigquery.create(datasetInfo);
+    //bigquery.create(datasetInfo);
     LOG.info("Created test dataset: " + DATASET);
     tableInfo =
         TableInfo.newBuilder(
@@ -160,8 +160,8 @@ public class ITBigQueryWriteManualClientTest {
                     .setDefaultValueExpression("CURRENT_TIMESTAMP()")
                     .setMode(Mode.NULLABLE)
                     .build()));
-    bigquery.create(tableInfo);
-    bigquery.create(tableInfo2);
+    //bigquery.create(tableInfo);
+    //bigquery.create(tableInfo2);
     tableId =
         String.format(
             "projects/%s/datasets/%s/tables/%s",
@@ -175,7 +175,7 @@ public class ITBigQueryWriteManualClientTest {
             .setLocation("EU")
             .setDescription(DESCRIPTION)
             .build();
-    bigquery.create(datasetInfoEU);
+    //bigquery.create(datasetInfoEU);
     tableInfoEU =
         TableInfo.newBuilder(
                 TableId.of(DATASET_EU, TABLE),
@@ -188,7 +188,7 @@ public class ITBigQueryWriteManualClientTest {
         String.format(
             "projects/%s/datasets/%s/tables/%s",
             ServiceOptions.getDefaultProjectId(), DATASET_EU, TABLE);
-    bigquery.create(tableInfoEU);
+    //bigquery.create(tableInfoEU);
   }
 
   @AfterClass
@@ -198,7 +198,7 @@ public class ITBigQueryWriteManualClientTest {
     }
 
     if (bigquery != null) {
-      RemoteBigQueryHelper.forceDelete(bigquery, DATASET);
+      //RemoteBigQueryHelper.forceDelete(bigquery, DATASET);
       LOG.info("Deleted test dataset: " + DATASET);
     }
   }
@@ -920,20 +920,20 @@ public class ITBigQueryWriteManualClientTest {
 
   @Test
   public void testStreamWriterWithDefaultValue() throws ExecutionException, InterruptedException {
-    String tableName = "streamWriterWithDefaultValue";
+    String tableName = "dp_test_table";
     String exclusiveTableId =
         String.format(
             "projects/%s/datasets/%s/tables/%s",
             ServiceOptions.getDefaultProjectId(), DATASET, tableName);
     tableInfo =
         TableInfo.newBuilder(TableId.of(DATASET, tableName), defaultValueTableDefinition).build();
-    bigquery.create(tableInfo);
+    //bigquery.create(tableInfo);
     try (StreamWriter streamWriter =
         StreamWriter.newBuilder(exclusiveTableId + "/_default")
             .setWriterSchema(
                 ProtoSchemaConverter.convert(SimpleTypeForDefaultValue.getDescriptor()))
             .setDefaultMissingValueInterpretation(MissingValueInterpretation.DEFAULT_VALUE)
-            .setEnableConnectionPool(true)
+            .setEnableConnectionPool(false)
             .setTraceId(TEST_TRACE_ID)
             .build()) {
       // 1. row has both fields set.
